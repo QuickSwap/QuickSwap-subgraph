@@ -1,12 +1,12 @@
 specVersion: 0.0.2
 description: Quickswap is a decentralized protocol for automated token exchange on Matic.
-repository: https://github.com/Uniswap/uniswap-v2-subgraph
+repository: https://github.com/sameepsi/quickswapv2-subgraph
 schema:
   file: ./schema.graphql
 dataSources:
   - kind: ethereum/contract
     name: Factory
-    network: mainnet
+    network: matic
     source:
       address: '0x5757371414417b8C6CAad45bAeF941aBc7d3Ab32'
       abi: Factory
