@@ -81,11 +81,6 @@ export function fetchTokenSymbol(tokenAddress: Address): string {
 }
 
 export function fetchTokenName(tokenAddress: Address): string {
-  // hard coded override
-  if (tokenAddress.toHexString() == '0xe0b7927c4af23765cb51314a0e0521a9645f0e2a') {
-    return 'DGD'
-  }
-
   let contract = ERC20.bind(tokenAddress)
   let contractNameBytes = ERC20NameBytes.bind(tokenAddress)
 
@@ -165,7 +160,6 @@ export function createLiquiditySnapshot(position: LiquidityPosition, event: Ethe
 
   // create new snapshot
   let snapshot = new LiquidityPositionSnapshot(position.id.concat(timestamp.toString()))
-  snapshot.liquidityPosition = position.id
   snapshot.timestamp = timestamp
   snapshot.block = event.block.number.toI32()
   snapshot.user = position.user
@@ -179,5 +173,4 @@ export function createLiquiditySnapshot(position: LiquidityPosition, event: Ethe
   snapshot.liquidityTokenBalance = position.liquidityTokenBalance
   snapshot.liquidityPosition = position.id
   snapshot.save()
-  position.save()
 }

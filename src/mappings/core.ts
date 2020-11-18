@@ -156,11 +156,9 @@ export function handleTransfer(event: Transfer): void {
           .concat('-')
           .concat(BigInt.fromI32(burns.length).toString())
       )
-      burn.transaction = transaction.id
       burn.needsComplete = false
       burn.pair = pair.id
       burn.liquidity = value
-      burn.transaction = transaction.id
       burn.timestamp = transaction.timestamp
     }
 
