@@ -1,13 +1,42 @@
 /* eslint-disable prefer-const */
 import { Pair, Token, Bundle } from '../types/schema'
-import { BigDecimal, Address, BigInt } from '@graphprotocol/graph-ts/index'
+import { BigDecimal, Address } from '@graphprotocol/graph-ts/index'
 import { ZERO_BD, factoryContract, ADDRESS_ZERO, ONE_BD } from './helpers'
 
-const WETH_ADDRESS = '0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619'
+const WETH_ADDRESS = '0x7ceb23fd6bc0add59e62ac25578270cff1b9f619'
+const USDC_WETH_PAIR = '0x853ee4b2a13f8a742d64c8f088be7ba2131f670d' // created 10008355
+const DAI_WETH_PAIR = '0x4a35582a710e1f4b2030a3f826da20bfb6703c09' // created block 10042267
+const USDT_WETH_PAIR = '0xf6422b997c7f54d1c6a6e103bcb1499eea0a7046' // created block 10093341
+
 
 // dummy for testing
 export function getEthPriceInUSD(): BigDecimal {
-  return ONE_BD;
+  let daiPair = Pair.load(DAI_WETH_PAIR) // dai is token0
+  let usdcPair = Pair.load(USDC_WETH_PAIR) // usdc is token0
+  let usdtPair = Pair.load(USDT_WETH_PAIR) // usdt is token1
+
+  // all 3 have been created
+  if (daiPair !== null && usdcPair !== null && usdtPair !== null) {
+    let totalLiquidityETH = daiPair.reserve0.plus(usdcPair.reserve1).plus(usdtPair.reserve0)
+    let daiWeight = daiPair.reserve0.div(totalLiquidityETH)
+    let usdcWeight = usdcPair.reserve1.div(totalLiquidityETH)
+    let usdtWeight = usdtPair.reserve0.div(totalLiquidityETH)
+    return daiPair.token1Price
+      .times(daiWeight)
+      .plus(usdcPair.token0Price.times(usdcWeight))
+      .plus(usdtPair.token1Price.times(usdtWeight))
+    // dai and USDC have been created
+  } else if (daiPair !== null && usdcPair !== null) {
+    let totalLiquidityETH = daiPair.reserve0.plus(usdcPair.reserve1)
+    let daiWeight = daiPair.reserve0.div(totalLiquidityETH)
+    let usdcWeight = usdcPair.reserve1.div(totalLiquidityETH)
+    return daiPair.token1Price.times(daiWeight).plus(usdcPair.token0Price.times(usdcWeight))
+    // USDC is the only pair so far
+  } else if (usdcPair !== null) {
+    return usdcPair.token0Price
+  } else {
+    return ZERO_BD
+  }
 }
 
 // token where amounts should contribute to tracked volume and liquidity
@@ -24,9 +53,6 @@ let WHITELIST: string[] = [
   '0x831753dd7087cac61ab5644b308642cc1c33dc13', //QUICK
   '0xb33eaad8d922b1083446dc23f610c2567fb5180f'  //UNI
 ]
-
-// minimum liquidity required to count towards tracked volume for pairs with small # of Lps
-let MINIMUM_USD_THRESHOLD_NEW_PAIRS = BigDecimal.fromString('1')
 
 // minimum liquidity for price to get tracked
 let MINIMUM_LIQUIDITY_THRESHOLD_ETH = BigDecimal.fromString('0.01')
