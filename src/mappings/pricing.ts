@@ -9,7 +9,6 @@ const DAI_WETH_PAIR = '0x4a35582a710e1f4b2030a3f826da20bfb6703c09' // created bl
 const USDT_WETH_PAIR = '0xf6422b997c7f54d1c6a6e103bcb1499eea0a7046' // created block 10093341
 
 
-// dummy for testing
 export function getEthPriceInUSD(): BigDecimal {
   let daiPair = Pair.load(DAI_WETH_PAIR) // dai is token0
   let usdcPair = Pair.load(USDC_WETH_PAIR) // usdc is token0
@@ -45,36 +44,15 @@ let WHITELIST: string[] = [
   '0x8f3cf7ad23cd3cadbd9735aff958023239c6a063', // DAI
   '0x2791bca1f2de4661ed88a30c99a7a9449aa84174', // USDC
   '0xc2132d05d31c914a87c6611c10748aeb04b58e8f', // USDT
-  '0xa1c09c8f4f5d03fcc27b456475d53d988e98d7c5', // eDAI
-  '0x4ebde54ba404be158262ede801744b92b9878c61', // eUSDC
-  '0xfc39742fe9420a7af23757fc7e78d1c3ae4a9474', // eUSDT
-  '0xdb3b3b147a030f032633f6c4bebf9a2fb5a882b5', // EASY
   '0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270', //WMATIC
   '0x831753dd7087cac61ab5644b308642cc1c33dc13', //QUICK
   '0xb33eaad8d922b1083446dc23f610c2567fb5180f',  //UNI
   '0x1bfd67037b42cf73acf2047067bd4f2c47d9bfd6', //WBTC
   '0x385eeac5cb85a38a9a07a70c73e0a3271cfb54a7', //GHST
   '0x9719d867a500ef117cc201206b8ab51e794d3f82', //MAUSDC
-  '0xe0b22e0037b130a9f56bbb537684e6fa18192341', //MADAI
-  '0x840195888db4d6a99ed9f73fcd3b225bb3cb1a79', //SX
-  '0x9c78ee466d6cb57a4d01fd887d2b5dfb2d46288f', //MUST
   '0x104592a158490a9228070e0a8e5343b499e125d0', //FRAX
-  '0x20d3922b4a1a8560e1ac99fba4fade0c849e2142', //MAWETH
-  '0x823cd4264c1b951c9209ad0deaea9988fe8429bf', //MAAVE
-  '0x98ea609569bd25119707451ef982b90e3eb719cd', //MALINK
-  '0xdae5f1590db13e3b40423b5b5c5fbf175515910b', //MAUSDT
-  '0xf4b8888427b00d7caf21654408b7cba2ecf4ebd9', //MATUSD
-  '0x8c8bdbe9cee455732525086264a4bf9cf821c498', //MAUNI
-  '0xe20f7d1f0ec39c4d5db01f53554f2ef54c71f613', //MAYFI
-  '0x66768ad00746ac4d68ded9f64886d55d5243f5ec', //MRBAL
-  '0x8d1566569d5b695d44a9a234540f68d393cdc40d', //GAME
-  '0x48e3883233461c2ef4cb3fcf419d6db07fb86cea', //SENT
-  '0x07738eb4ce8932ca961c815cb12c9d4ab5bd0da4', //ELET
   '0x0e59d50add2d90f5111aca875bae0a72d95b4762', //DB
-  '0x7fbc10850cae055b27039af31bd258430e714c62', //UBT
-  '0xab0b2ddb9c7e440fac8e140a89c0dbcbf2d7bbff', //IFARM
-  '0x034b2090b579228482520c589dbd397c53fc51cc', //VISION
-  '0xe6fc6c7cb6d2c31b359a49a33ef08ab87f4de7ce', //IGG
+  '0x033d942a6b495c4071083f4cde1f17e986fe856c' //AGA
 ]
 
 // minimum liquidity for price to get tracked
