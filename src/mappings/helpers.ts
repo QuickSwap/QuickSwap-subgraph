@@ -127,7 +127,7 @@ export function fetchTokenDecimals(tokenAddress: Address): BigInt {
   return BigInt.fromI32(decimalValue as i32)
 }
 
-export function createLiquidityPosition(exchange: Address, user: Address): LiquidityPosition {
+/**export function createLiquidityPosition(exchange: Address, user: Address): LiquidityPosition {
   let id = exchange
     .toHexString()
     .concat('-')
@@ -178,4 +178,4 @@ export function createLiquiditySnapshot(position: LiquidityPosition, event: Ethe
   snapshot.liquidityTokenBalance = position.liquidityTokenBalance
   snapshot.liquidityPosition = position.id
   snapshot.save()
-}
+}*/
