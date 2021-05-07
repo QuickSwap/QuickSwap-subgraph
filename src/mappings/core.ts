@@ -40,13 +40,13 @@ export function handleTransfer(event: Transfer): void {
 
   // user stats
   let from = event.params.from
-  createUser(from)
+  //createUser(from)
   let to = event.params.to
-  createUser(to)
+  //createUser(to)
 
   // get pair and load contract
   let pair = Pair.load(event.address.toHexString())
-  let pairContract = PairContract.bind(event.address)
+  //let pairContract = PairContract.bind(event.address)
 
   // liquidity token amount being transfered
   let value = convertTokenToDecimal(event.params.value, BI_18)
@@ -191,7 +191,8 @@ export function handleTransfer(event: Transfer): void {
     // transaction.save()
   }
 
-  if (from.toHexString() != ADDRESS_ZERO && from.toHexString() != pair.id) {
+  //REMOVING LIQUIDITY POSITIONS FOR NOW
+  /**if (from.toHexString() != ADDRESS_ZERO && from.toHexString() != pair.id) {
     let fromUserLiquidityPosition = createLiquidityPosition(event.address, from)
     fromUserLiquidityPosition.liquidityTokenBalance = convertTokenToDecimal(pairContract.balanceOf(from), BI_18)
     fromUserLiquidityPosition.save()
@@ -203,7 +204,7 @@ export function handleTransfer(event: Transfer): void {
     toUserLiquidityPosition.liquidityTokenBalance = convertTokenToDecimal(pairContract.balanceOf(to), BI_18)
     toUserLiquidityPosition.save()
     createLiquiditySnapshot(toUserLiquidityPosition, event)
-  }
+  }*/
 
   transaction.save()
 }
@@ -317,8 +318,8 @@ export function handleMint(event: Mint): void {
   mint.save()
 
   // update the LP position
-  let liquidityPosition = createLiquidityPosition(event.address, mint.to as Address)
-  createLiquiditySnapshot(liquidityPosition, event)
+  //let liquidityPosition = createLiquidityPosition(event.address, mint.to as Address)
+  //createLiquiditySnapshot(liquidityPosition, event)
 
   // update day entities
   let dpd = updatePairDayData(pair as Pair, event)
@@ -384,8 +385,8 @@ export function handleBurn(event: Burn): void {
   burn.save()
 
   // update the LP position
-  let liquidityPosition = createLiquidityPosition(event.address, burn.sender as Address)
-  createLiquiditySnapshot(liquidityPosition, event)
+  //let liquidityPosition = createLiquidityPosition(event.address, burn.sender as Address)
+  //createLiquiditySnapshot(liquidityPosition, event)
 
   // update day entities
   let dpd = updatePairDayData(pair as Pair, event)
