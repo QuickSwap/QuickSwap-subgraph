@@ -90,7 +90,7 @@ export function handleSync(event: Sync): void {
   // get tracked liquidity - will be 0 if neither is in whitelist
   let trackedLiquidityETH: BigDecimal
   if (bundle.ethPrice.notEqual(ZERO_BD)) {
-    trackedLiquidityETH = getTrackedLiquidityUSD(pair.reserve0, token0 as Token, pair.reserve1, token1 as Token).div(
+    trackedLiquidityETH = getTrackedLiquidityUSD(pair.reserve0, token0 as Token, pair.reserve1, token1 as Token, bundle as Bundle).div(
       bundle.ethPrice
     )
   } else {
@@ -132,17 +132,11 @@ export function handleMint(event: Mint): void {
 
   uniswap.save()
 
-  // update the LP position
-  //let liquidityPosition = createLiquidityPosition(event.address, mint.to as Address)
-  //createLiquiditySnapshot(liquidityPosition, event)
-
   // update day entities
   let dpd = updatePairDayData(pair as Pair, event)
-  let udd = updateUniswapDayData(uniswap as UniswapFactory, event)
   let tdd0 = updateTokenDayData(token0 as Token, event)
   let tdd1 = updateTokenDayData(token1 as Token, event)
   dpd.save()
-  udd.save()
   tdd0.save()
   tdd1.save()
 }
@@ -164,11 +158,9 @@ export function handleBurn(event: Burn): void {
 
   // update day entities
   let dpd = updatePairDayData(pair as Pair, event)
-  let udd = updateUniswapDayData(uniswap as UniswapFactory, event)
   let tdd0 = updateTokenDayData(token0 as Token, event)
   let tdd1 = updateTokenDayData(token1 as Token, event)
   dpd.save()
-  udd.save()
   tdd0.save()
   tdd1.save()
 }
@@ -197,7 +189,7 @@ export function handleSwap(event: Swap): void {
   let derivedAmountUSD = derivedAmountETH.times(bundle.ethPrice)
 
   // only accounts for volume through white listed tokens
-  let trackedAmountUSD = getTrackedVolumeUSD(amount0Total, token0 as Token, amount1Total, token1 as Token, pair as Pair)
+  let trackedAmountUSD = getTrackedVolumeUSD(amount0Total, token0 as Token, amount1Total, token1 as Token)
 
   let trackedAmountETH: BigDecimal
   if (bundle.ethPrice.equals(ZERO_BD)) {
