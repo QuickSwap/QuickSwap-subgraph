@@ -229,7 +229,7 @@ export function handleSync(event: Sync): void {
   if (pair.reserve0.notEqual(ZERO_BD)) pair.token1Price = pair.reserve1.div(pair.reserve0)
   else pair.token1Price = ZERO_BD
 
-  pair.save()
+  // pair.save()
 
   // update ETH price now that reserves could have changed
   let bundle = Bundle.load('1')
@@ -321,11 +321,16 @@ export function handleMint(event: Mint): void {
   createLiquiditySnapshot(liquidityPosition, event)
 
   // update day entities
-  updatePairDayData(event)
-  updatePairHourData(event)
-  updateUniswapDayData(event)
-  updateTokenDayData(token0 as Token, event)
-  updateTokenDayData(token1 as Token, event)
+  let dpd = updatePairDayData(pair as Pair, event)
+  let phd = updatePairHourData(pair as Pair, event)
+  let udd = updateUniswapDayData(uniswap as UniswapFactory, event)
+  let tdd0 = updateTokenDayData(token0 as Token, event)
+  let tdd1 = updateTokenDayData(token1 as Token, event)
+  dpd.save()
+  phd.save()
+  udd.save()
+  tdd0.save()
+  tdd1.save()
 }
 
 export function handleBurn(event: Burn): void {
@@ -383,11 +388,16 @@ export function handleBurn(event: Burn): void {
   createLiquiditySnapshot(liquidityPosition, event)
 
   // update day entities
-  updatePairDayData(event)
-  updatePairHourData(event)
-  updateUniswapDayData(event)
-  updateTokenDayData(token0 as Token, event)
-  updateTokenDayData(token1 as Token, event)
+  let dpd = updatePairDayData(pair as Pair, event)
+  let phd = updatePairHourData(pair as Pair, event)
+  let udd = updateUniswapDayData(uniswap as UniswapFactory, event)
+  let tdd0 = updateTokenDayData(token0 as Token, event)
+  let tdd1 = updateTokenDayData(token1 as Token, event)
+  dpd.save()
+  phd.save()
+  udd.save()
+  tdd0.save()
+  tdd1.save()
 }
 
 export function handleSwap(event: Swap): void {
@@ -501,9 +511,9 @@ export function handleSwap(event: Swap): void {
   transaction.save()
 
   // update day entities
-  let pairDayData = updatePairDayData(pair, event)
-  let pairHourData = updatePairHourData(pair, event)
-  let uniswapDayData = updateUniswapDayData(uniswap, event)
+  let pairDayData = updatePairDayData(pair as Pair, event)
+  let pairHourData = updatePairHourData(pair as Pair, event)
+  let uniswapDayData = updateUniswapDayData(uniswap as UniswapFactory, event)
   let token0DayData = updateTokenDayData(token0 as Token, event)
   let token1DayData = updateTokenDayData(token1 as Token, event)
 
