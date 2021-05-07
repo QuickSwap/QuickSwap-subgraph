@@ -6,6 +6,7 @@
   "scripts": {
     "codegen": "graph codegen --output-dir src/types/",
     "build": "graph build",
+    "remove-local": "graph remove sameepsi/quickswap --node http://127.0.0.1:8020/",
     "create-local": "graph create sameepsi/quickswap --node http://127.0.0.1:8020/",
     "deploy-local": "graph deploy sameepsi/quickswap --ipfs https://api.thegraph.com/ipfs/ --node http://127.0.0.1:8020/ --debug",
     "deploy": "graph deploy --access-token <access_token> --node https://api.thegraph.com/deploy/ --ipfs https://api.thegraph.com/ipfs/ sameepsi/quickswap",
