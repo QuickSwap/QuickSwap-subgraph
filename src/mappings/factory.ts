@@ -88,13 +88,13 @@ export function handleNewPair(event: PairCreated): void {
 
   if (isOnWhitelist(token1.id)) {
     let white0 = token0.whitelist
-    white0.push(token1.id)
+    white0.push(event.params.pair.toHexString())
     token0.whitelist = white0
   }
 
   if (isOnWhitelist(token0.id)) {
     let white1 = token1.whitelist
-    white1.push(token0.id)
+    white1.push(event.params.pair.toHexString())
     token1.whitelist = white1
   }
 
