@@ -1,5 +1,9 @@
 build/
 node_modules/
 src/types/
+
 .DS_STORE
 yarn-error.log
+
+# npm
+*.npm-global/*
