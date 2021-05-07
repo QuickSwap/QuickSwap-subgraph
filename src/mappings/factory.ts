@@ -60,7 +60,6 @@ export function handleNewPair(event: PairCreated): void {
     token0.totalLiquidity = ZERO_BD
     // token0.allPairs = []
     token0.whitelist = []
-    token0.txCount = ZERO_BI
   }
 
   // fetch info if null
@@ -83,7 +82,6 @@ export function handleNewPair(event: PairCreated): void {
     token1.totalLiquidity = ZERO_BD
     // token1.allPairs = []
     token1.whitelist = []
-    token1.txCount = ZERO_BI
   }
 
   if (isOnWhitelist(token1.id)) {
@@ -103,7 +101,6 @@ export function handleNewPair(event: PairCreated): void {
   pair.token1 = token1.id
   pair.createdAtTimestamp = event.block.timestamp
   pair.createdAtBlockNumber = event.block.number
-  pair.txCount = ZERO_BI
   pair.reserve0 = ZERO_BD
   pair.reserve1 = ZERO_BD
   pair.trackedReserveETH = ZERO_BD

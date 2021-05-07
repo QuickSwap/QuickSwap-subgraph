@@ -41,7 +41,6 @@ type Token @entity {
   whitelist: [String]!
 
   # transactions across all pairs
-  txCount: BigInt!
 
   # liquidity across all pairs
   totalLiquidity: BigDecimal!
@@ -82,7 +81,6 @@ type Pair @entity {
   volumeToken1: BigDecimal!
   volumeUSD: BigDecimal!
   untrackedVolumeUSD: BigDecimal!
-  txCount: BigInt!
 
   # creation stats
   createdAtTimestamp: BigInt!

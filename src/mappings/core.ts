@@ -60,7 +60,7 @@ export function handleSync(event: Sync): void {
   let token1 = Token.load(pair.token1)
   let uniswap = UniswapFactory.load(FACTORY_ADDRESS)
 
-  // reset factory liquidity by subtracting onluy tarcked liquidity
+  // reset factory liquidity by subtracting only tracked liquidity
   uniswap.totalLiquidityETH = uniswap.totalLiquidityETH.minus(pair.trackedReserveETH as BigDecimal)
 
   // reset token total liquidity amounts
@@ -127,18 +127,9 @@ export function handleMint(event: Mint): void {
   let token0 = Token.load(pair.token0)
   let token1 = Token.load(pair.token1)
 
-  // update txn counts
-  token0.txCount = token0.txCount.plus(ONE_BI)
-  token1.txCount = token1.txCount.plus(ONE_BI)
-
  // update txn counts
-  pair.txCount = pair.txCount.plus(ONE_BI)
   uniswap.txCount = uniswap.txCount.plus(ONE_BI)
 
-  // save entities
-  token0.save()
-  token1.save()
-  pair.save()
   uniswap.save()
 
   // update the LP position
@@ -166,22 +157,10 @@ export function handleBurn(event: Burn): void {
   let token1 = Token.load(pair.token1)
 
   // update txn counts
-  token0.txCount = token0.txCount.plus(ONE_BI)
-  token1.txCount = token1.txCount.plus(ONE_BI)
-
-  // update txn counts
   uniswap.txCount = uniswap.txCount.plus(ONE_BI)
-  pair.txCount = pair.txCount.plus(ONE_BI)
 
   // update global counter and save
-  token0.save()
-  token1.save()
-  pair.save()
   uniswap.save()
-
-  // update the LP position
-  //let liquidityPosition = createLiquidityPosition(event.address, burn.sender as Address)
-  //createLiquiditySnapshot(liquidityPosition, event)
 
   // update day entities
   let dpd = updatePairDayData(pair as Pair, event)
@@ -237,16 +216,11 @@ export function handleSwap(event: Swap): void {
   token1.tradeVolumeUSD = token1.tradeVolumeUSD.plus(trackedAmountUSD)
   token1.untrackedVolumeUSD = token1.untrackedVolumeUSD.plus(derivedAmountUSD)
 
-  // update txn counts
-  token0.txCount = token0.txCount.plus(ONE_BI)
-  token1.txCount = token1.txCount.plus(ONE_BI)
-
   // update pair volume data, use tracked amount if we have it as its probably more accurate
   pair.volumeUSD = pair.volumeUSD.plus(trackedAmountUSD)
   pair.volumeToken0 = pair.volumeToken0.plus(amount0Total)
   pair.volumeToken1 = pair.volumeToken1.plus(amount1Total)
   pair.untrackedVolumeUSD = pair.untrackedVolumeUSD.plus(derivedAmountUSD)
-  pair.txCount = pair.txCount.plus(ONE_BI)
   // pair.save()
 
   // update global values, only used tracked amounts for volume
