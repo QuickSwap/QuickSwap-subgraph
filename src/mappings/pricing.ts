@@ -55,6 +55,13 @@ let WHITELIST: string[] = [
   '0x033d942a6b495c4071083f4cde1f17e986fe856c' //AGA
 ]
 
+export function isOnWhitelist(token: string) {
+  for(i = 0; i < WHITELIST.length; i++) {
+    if(token == WHITELIST[i]) return true
+  }
+  return false
+}
+
 // minimum liquidity for price to get tracked
 let MINIMUM_LIQUIDITY_THRESHOLD_ETH = BigDecimal.fromString('0.001')
 
