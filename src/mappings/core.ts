@@ -89,7 +89,7 @@ export function handleTransfer(event: Transfer): void {
       transaction.mints = mints.concat([mint.id])
 
       // save entities
-      transaction.save()
+      // transaction.save()
       factory.save()
     }
   }
@@ -117,7 +117,7 @@ export function handleTransfer(event: Transfer): void {
     // against unintended side effects for other code paths.
     burns.push(burn.id)
     transaction.burns = burns
-    transaction.save()
+    // transaction.save()
   }
 
   // burn
@@ -172,7 +172,7 @@ export function handleTransfer(event: Transfer): void {
       // side effects for other code paths.
       mints.pop()
       transaction.mints = mints
-      transaction.save()
+      // transaction.save()
     }
     burn.save()
     // if accessing last one, replace it
@@ -188,7 +188,7 @@ export function handleTransfer(event: Transfer): void {
       burns.push(burn.id)
     }
     transaction.burns = burns
-    transaction.save()
+    // transaction.save()
   }
 
   // if (from.toHexString() != ADDRESS_ZERO && from.toHexString() != pair.id) {
@@ -238,8 +238,8 @@ export function handleSync(event: Sync): void {
 
   token0.derivedETH = findEthPerToken(token0 as Token)
   token1.derivedETH = findEthPerToken(token1 as Token)
-  token0.save()
-  token1.save()
+  // token0.save()
+  // token1.save()
 
   // get tracked liquidity - will be 0 if neither is in whitelist
   let trackedLiquidityETH: BigDecimal
