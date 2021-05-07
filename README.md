@@ -12,7 +12,21 @@ This subgraph dynamically tracks any pair created by the QuickSwap factory. It t
 
 ## Running Locally
 
-Make sure to update package.json settings to point to your own graph account.
+Clone this repo then run the following steps locally to generate files, build, then deploy your subgraph.
+
+You will need to have created the Subgraph within the [dashboard](https://thegraph.com/explorer/dashboard).
+
+You can also get your auth token from the same location.
+
+``` bash
+yarn && yarn codegen
+
+yarn build
+
+export GRAPH_TOKEN=<auth_token>
+export GITHUB_USER=<github_username>
+export SUBGRAPH_NAME=<subgraph_name>
+```
 
 ## Key Entity Overviews
 

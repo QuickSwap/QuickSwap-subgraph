@@ -40,8 +40,6 @@ type Token @entity {
   # for teacking volume
   whitelist: [String]!
 
-  # transactions across all pairs
-
   # liquidity across all pairs
   totalLiquidity: BigDecimal!
 
