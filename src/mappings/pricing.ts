@@ -55,15 +55,15 @@ let WHITELIST: string[] = [
   '0x033d942a6b495c4071083f4cde1f17e986fe856c' //AGA
 ]
 
-export function isOnWhitelist(token: string) {
-  for(i = 0; i < WHITELIST.length; i++) {
+export function isOnWhitelist(token: string): boolean {
+  for(var i = 0; i < WHITELIST.length; i++) {
     if(token == WHITELIST[i]) return true
   }
   return false
 }
 
 // minimum liquidity for price to get tracked
-let MINIMUM_LIQUIDITY_THRESHOLD_ETH = BigDecimal.fromString('0.001')
+let MINIMUM_LIQUIDITY_THRESHOLD_ETH = BigDecimal.fromString('1')
 
 /**
  * Search through graph to find derived Eth per token.
@@ -75,10 +75,10 @@ export function findEthPerToken(token: Token): BigDecimal {
   }
 
   // loop through whitelist and check if paired with any
-  for (let i = 0; i < token.whitelist.length; ++i) {
-    let pairAddress = token.whitelist[i]
-    if (pairAddress.toHexString() != ADDRESS_ZERO) {
-      let pair = Pair.load(pairAddress.toHexString())
+  let whitelist = token.whitelist
+  for (let i = 0; i < whitelist.length; ++i) {
+    let pairAddress = whitelist[i]
+      let pair = Pair.load(pairAddress)
       if (pair.token0 == token.id && pair.reserveETH.gt(MINIMUM_LIQUIDITY_THRESHOLD_ETH)) {
         let token1 = Token.load(pair.token1)
         return pair.token1Price.times(token1.derivedETH as BigDecimal) // return token1 per our token * Eth per token 1
@@ -87,7 +87,6 @@ export function findEthPerToken(token: Token): BigDecimal {
         let token0 = Token.load(pair.token0)
         return pair.token0Price.times(token0.derivedETH as BigDecimal) // return token0 per our token * ETH per token 0
       }
-    }
   }
   return ZERO_BD // nothing was found return 0
 }

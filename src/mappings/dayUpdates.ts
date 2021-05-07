@@ -4,7 +4,7 @@ import { BigInt, BigDecimal, EthereumEvent } from '@graphprotocol/graph-ts'
 import { Pair, Bundle, Token, UniswapFactory, UniswapDayData, PairDayData, TokenDayData } from '../types/schema'
 import { ONE_BI, ZERO_BD, ZERO_BI, FACTORY_ADDRESS } from './helpers'
 
-export function updateUniswapDayData(uniswap: Uniswap, event: EthereumEvent): UniswapDayData {
+export function updateUniswapDayData(uniswap: UniswapFactory, event: EthereumEvent): UniswapDayData {
   // let uniswap = UniswapFactory.load(FACTORY_ADDRESS)
   let timestamp = event.block.timestamp.toI32()
   let dayID = timestamp / 86400
@@ -23,7 +23,7 @@ export function updateUniswapDayData(uniswap: Uniswap, event: EthereumEvent): Un
   uniswapDayData.totalLiquidityUSD = uniswap.totalLiquidityUSD
   uniswapDayData.totalLiquidityETH = uniswap.totalLiquidityETH
   uniswapDayData.txCount = uniswap.txCount
-  // uniswapDayData.save()
+  //uniswapDayData.save()
 
   return uniswapDayData as UniswapDayData
 }
@@ -55,7 +55,7 @@ export function updatePairDayData(pair: Pair, event: EthereumEvent): PairDayData
   pairDayData.reserve1 = pair.reserve1
   pairDayData.reserveUSD = pair.reserveUSD
   pairDayData.dailyTxns = pairDayData.dailyTxns.plus(ONE_BI)
-  // pairDayData.save()
+  //pairDayData.save()
 
   return pairDayData as PairDayData
 }
@@ -84,7 +84,7 @@ export function updatePairHourData(pair: Pair, event: EthereumEvent): PairHourDa
   pairHourData.reserve1 = pair.reserve1
   pairHourData.reserveUSD = pair.reserveUSD
   pairHourData.hourlyTxns = pairHourData.hourlyTxns.plus(ONE_BI)
-  // pairHourData.save()
+  //pairHourData.save()
 
   return pairHourData as PairHourData
 }
@@ -116,7 +116,7 @@ export function updateTokenDayData(token: Token, event: EthereumEvent): TokenDay
   tokenDayData.totalLiquidityETH = token.totalLiquidity.times(token.derivedETH as BigDecimal)
   tokenDayData.totalLiquidityUSD = tokenDayData.totalLiquidityETH.times(bundle.ethPrice)
   tokenDayData.dailyTxns = tokenDayData.dailyTxns.plus(ONE_BI)
-  // tokenDayData.save()
+  //tokenDayData.save()
 
   /**
    * @todo test if this speeds up sync

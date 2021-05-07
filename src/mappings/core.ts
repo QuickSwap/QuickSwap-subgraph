@@ -46,7 +46,7 @@ export function handleTransfer(event: Transfer): void {
 
   // get pair and load contract
   let pair = Pair.load(event.address.toHexString())
-  // let pairContract = PairContract.bind(event.address)
+  let pairContract = PairContract.bind(event.address)
 
   // liquidity token amount being transfered
   let value = convertTokenToDecimal(event.params.value, BI_18)
