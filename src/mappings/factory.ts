@@ -12,6 +12,7 @@ import {
   fetchTokenDecimals,
   fetchTokenTotalSupply
 } from './helpers'
+import { isOnWhitelist } from './pricing'
 
 export function handleNewPair(event: PairCreated): void {
   // load factory (create if first exchange)
