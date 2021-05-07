@@ -1,4 +1,3 @@
-import { PairHourData } from './../types/schema'
 /* eslint-disable prefer-const */
 import { BigInt, BigDecimal, EthereumEvent } from '@graphprotocol/graph-ts'
 import { Pair, Bundle, Token, UniswapFactory, UniswapDayData, PairDayData, TokenDayData } from '../types/schema'
@@ -58,35 +57,6 @@ export function updatePairDayData(pair: Pair, event: EthereumEvent): PairDayData
   //pairDayData.save()
 
   return pairDayData as PairDayData
-}
-
-export function updatePairHourData(pair: Pair, event: EthereumEvent): PairHourData {
-  let timestamp = event.block.timestamp.toI32()
-  let hourIndex = timestamp / 3600 // get unique hour within unix history
-  let hourStartUnix = hourIndex * 3600 // want the rounded effect
-  let hourPairID = event.address
-    .toHexString()
-    .concat('-')
-    .concat(BigInt.fromI32(hourIndex).toString())
-  // let pair = Pair.load(event.address.toHexString())
-  let pairHourData = PairHourData.load(hourPairID)
-  if (pairHourData === null) {
-    pairHourData = new PairHourData(hourPairID)
-    pairHourData.hourStartUnix = hourStartUnix
-    pairHourData.pair = event.address.toHexString()
-    pairHourData.hourlyVolumeToken0 = ZERO_BD
-    pairHourData.hourlyVolumeToken1 = ZERO_BD
-    pairHourData.hourlyVolumeUSD = ZERO_BD
-    pairHourData.hourlyTxns = ZERO_BI
-  }
-
-  pairHourData.reserve0 = pair.reserve0
-  pairHourData.reserve1 = pair.reserve1
-  pairHourData.reserveUSD = pair.reserveUSD
-  pairHourData.hourlyTxns = pairHourData.hourlyTxns.plus(ONE_BI)
-  //pairHourData.save()
-
-  return pairHourData as PairHourData
 }
 
 export function updateTokenDayData(token: Token, event: EthereumEvent): TokenDayData {

@@ -11,7 +11,7 @@ import {
   Bundle
 } from '../types/schema'
 import { Pair as PairContract, Mint, Burn, Swap, Transfer, Sync } from '../types/templates/Pair/Pair'
-import { updatePairDayData, updateTokenDayData, updateUniswapDayData, updatePairHourData } from './dayUpdates'
+import { updatePairDayData, updateTokenDayData, updateUniswapDayData } from './dayUpdates'
 import { getEthPriceInUSD, findEthPerToken, getTrackedVolumeUSD, getTrackedLiquidityUSD } from './pricing'
 import {
   convertTokenToDecimal,
@@ -160,19 +160,22 @@ export function handleTransfer(event: Transfer): void {
     }
 
     // if this logical burn included a fee mint, account for this
-    if (mints.length !== 0 && !isCompleteMint(mints[mints.length - 1])) {
+    if (mints.length !== 0) {
       let mint = MintEvent.load(mints[mints.length - 1])
-      burn.feeTo = mint.to
-      burn.feeLiquidity = mint.liquidity
-      // remove the logical mint
-      store.remove('Mint', mints[mints.length - 1])
-      // update the transaction
+      if ( mint.sender === null ) {
+        burn.feeTo = mint.to
+        burn.feeLiquidity = mint.liquidity
+        // remove the logical mint
+        store.remove('Mint', mints[mints.length - 1])
+        // update the transaction
 
-      // TODO: Consider using .slice().pop() to protect against unintended
-      // side effects for other code paths.
-      mints.pop()
-      transaction.mints = mints
-      // transaction.save()
+        // TODO: Consider using .slice().pop() to protect against unintended
+        // side effects for other code paths.
+        mints.pop()
+        transaction.mints = mints
+        // transaction.save()
+      } 
+      
     }
     burn.save()
     // if accessing last one, replace it
@@ -322,12 +325,10 @@ export function handleMint(event: Mint): void {
 
   // update day entities
   let dpd = updatePairDayData(pair as Pair, event)
-  let phd = updatePairHourData(pair as Pair, event)
   let udd = updateUniswapDayData(uniswap as UniswapFactory, event)
   let tdd0 = updateTokenDayData(token0 as Token, event)
   let tdd1 = updateTokenDayData(token1 as Token, event)
   dpd.save()
-  phd.save()
   udd.save()
   tdd0.save()
   tdd1.save()
@@ -389,12 +390,10 @@ export function handleBurn(event: Burn): void {
 
   // update day entities
   let dpd = updatePairDayData(pair as Pair, event)
-  let phd = updatePairHourData(pair as Pair, event)
   let udd = updateUniswapDayData(uniswap as UniswapFactory, event)
   let tdd0 = updateTokenDayData(token0 as Token, event)
   let tdd1 = updateTokenDayData(token1 as Token, event)
   dpd.save()
-  phd.save()
   udd.save()
   tdd0.save()
   tdd1.save()
@@ -512,7 +511,6 @@ export function handleSwap(event: Swap): void {
 
   // update day entities
   let pairDayData = updatePairDayData(pair as Pair, event)
-  let pairHourData = updatePairHourData(pair as Pair, event)
   let uniswapDayData = updateUniswapDayData(uniswap as UniswapFactory, event)
   let token0DayData = updateTokenDayData(token0 as Token, event)
   let token1DayData = updateTokenDayData(token1 as Token, event)
@@ -528,12 +526,6 @@ export function handleSwap(event: Swap): void {
   pairDayData.dailyVolumeToken1 = pairDayData.dailyVolumeToken1.plus(amount1Total)
   pairDayData.dailyVolumeUSD = pairDayData.dailyVolumeUSD.plus(trackedAmountUSD)
   pairDayData.save()
-
-  // update hourly pair data
-  pairHourData.hourlyVolumeToken0 = pairHourData.hourlyVolumeToken0.plus(amount0Total)
-  pairHourData.hourlyVolumeToken1 = pairHourData.hourlyVolumeToken1.plus(amount1Total)
-  pairHourData.hourlyVolumeUSD = pairHourData.hourlyVolumeUSD.plus(trackedAmountUSD)
-  pairHourData.save()
 
   // swap specific updating for token0
   token0DayData.dailyVolumeToken = token0DayData.dailyVolumeToken.plus(amount0Total)
