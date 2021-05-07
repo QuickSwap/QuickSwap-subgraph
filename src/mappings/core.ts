@@ -46,7 +46,7 @@ export function handleTransfer(event: Transfer): void {
 
   // get pair and load contract
   let pair = Pair.load(event.address.toHexString())
-  let pairContract = PairContract.bind(event.address)
+  // let pairContract = PairContract.bind(event.address)
 
   // liquidity token amount being transfered
   let value = convertTokenToDecimal(event.params.value, BI_18)
@@ -89,7 +89,7 @@ export function handleTransfer(event: Transfer): void {
       transaction.mints = mints.concat([mint.id])
 
       // save entities
-      transaction.save()
+      // transaction.save()
       factory.save()
     }
   }
@@ -117,7 +117,7 @@ export function handleTransfer(event: Transfer): void {
     // against unintended side effects for other code paths.
     burns.push(burn.id)
     transaction.burns = burns
-    transaction.save()
+    // transaction.save()
   }
 
   // burn
@@ -172,7 +172,7 @@ export function handleTransfer(event: Transfer): void {
       // side effects for other code paths.
       mints.pop()
       transaction.mints = mints
-      transaction.save()
+      // transaction.save()
     }
     burn.save()
     // if accessing last one, replace it
@@ -188,7 +188,7 @@ export function handleTransfer(event: Transfer): void {
       burns.push(burn.id)
     }
     transaction.burns = burns
-    transaction.save()
+    // transaction.save()
   }
 
   if (from.toHexString() != ADDRESS_ZERO && from.toHexString() != pair.id) {
@@ -229,7 +229,7 @@ export function handleSync(event: Sync): void {
   if (pair.reserve0.notEqual(ZERO_BD)) pair.token1Price = pair.reserve1.div(pair.reserve0)
   else pair.token1Price = ZERO_BD
 
-  pair.save()
+  // pair.save()
 
   // update ETH price now that reserves could have changed
   let bundle = Bundle.load('1')
@@ -238,8 +238,8 @@ export function handleSync(event: Sync): void {
 
   token0.derivedETH = findEthPerToken(token0 as Token)
   token1.derivedETH = findEthPerToken(token1 as Token)
-  token0.save()
-  token1.save()
+  // token0.save()
+  // token1.save()
 
   // get tracked liquidity - will be 0 if neither is in whitelist
   let trackedLiquidityETH: BigDecimal
@@ -321,11 +321,16 @@ export function handleMint(event: Mint): void {
   createLiquiditySnapshot(liquidityPosition, event)
 
   // update day entities
-  updatePairDayData(event)
-  updatePairHourData(event)
-  updateUniswapDayData(event)
-  updateTokenDayData(token0 as Token, event)
-  updateTokenDayData(token1 as Token, event)
+  let dpd = updatePairDayData(pair as Pair, event)
+  let phd = updatePairHourData(pair as Pair, event)
+  let udd = updateUniswapDayData(uniswap as UniswapFactory, event)
+  let tdd0 = updateTokenDayData(token0 as Token, event)
+  let tdd1 = updateTokenDayData(token1 as Token, event)
+  dpd.save()
+  phd.save()
+  udd.save()
+  tdd0.save()
+  tdd1.save()
 }
 
 export function handleBurn(event: Burn): void {
@@ -383,11 +388,16 @@ export function handleBurn(event: Burn): void {
   createLiquiditySnapshot(liquidityPosition, event)
 
   // update day entities
-  updatePairDayData(event)
-  updatePairHourData(event)
-  updateUniswapDayData(event)
-  updateTokenDayData(token0 as Token, event)
-  updateTokenDayData(token1 as Token, event)
+  let dpd = updatePairDayData(pair as Pair, event)
+  let phd = updatePairHourData(pair as Pair, event)
+  let udd = updateUniswapDayData(uniswap as UniswapFactory, event)
+  let tdd0 = updateTokenDayData(token0 as Token, event)
+  let tdd1 = updateTokenDayData(token1 as Token, event)
+  dpd.save()
+  phd.save()
+  udd.save()
+  tdd0.save()
+  tdd1.save()
 }
 
 export function handleSwap(event: Swap): void {
@@ -443,7 +453,7 @@ export function handleSwap(event: Swap): void {
   pair.volumeToken1 = pair.volumeToken1.plus(amount1Total)
   pair.untrackedVolumeUSD = pair.untrackedVolumeUSD.plus(derivedAmountUSD)
   pair.txCount = pair.txCount.plus(ONE_BI)
-  pair.save()
+  // pair.save()
 
   // update global values, only used tracked amounts for volume
   let uniswap = UniswapFactory.load(FACTORY_ADDRESS)
@@ -501,9 +511,9 @@ export function handleSwap(event: Swap): void {
   transaction.save()
 
   // update day entities
-  let pairDayData = updatePairDayData(event)
-  let pairHourData = updatePairHourData(event)
-  let uniswapDayData = updateUniswapDayData(event)
+  let pairDayData = updatePairDayData(pair as Pair, event)
+  let pairHourData = updatePairHourData(pair as Pair, event)
+  let uniswapDayData = updateUniswapDayData(uniswap as UniswapFactory, event)
   let token0DayData = updateTokenDayData(token0 as Token, event)
   let token1DayData = updateTokenDayData(token1 as Token, event)
 

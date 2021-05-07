@@ -55,6 +55,13 @@ let WHITELIST: string[] = [
   '0x033d942a6b495c4071083f4cde1f17e986fe856c' //AGA
 ]
 
+export function isOnWhitelist(token: string) {
+  for(i = 0; i < WHITELIST.length; i++) {
+    if(token == WHITELIST[i]) return true
+  }
+  return false
+}
+
 // minimum liquidity for price to get tracked
 let MINIMUM_LIQUIDITY_THRESHOLD_ETH = BigDecimal.fromString('0.001')
 
@@ -68,8 +75,8 @@ export function findEthPerToken(token: Token): BigDecimal {
   }
 
   // loop through whitelist and check if paired with any
-  for (let i = 0; i < WHITELIST.length; ++i) {
-    let pairAddress = factoryContract.getPair(Address.fromString(token.id), Address.fromString(WHITELIST[i]))
+  for (let i = 0; i < token.whitelist.length; ++i) {
+    let pairAddress = token.whitelist[i]
     if (pairAddress.toHexString() != ADDRESS_ZERO) {
       let pair = Pair.load(pairAddress.toHexString())
       if (pair.token0 == token.id && pair.reserveETH.gt(MINIMUM_LIQUIDITY_THRESHOLD_ETH)) {

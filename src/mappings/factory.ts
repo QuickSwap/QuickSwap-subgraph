@@ -12,6 +12,7 @@ import {
   fetchTokenDecimals,
   fetchTokenTotalSupply
 } from './helpers'
+import { isOnWhitelist } from './pricing'
 
 export function handleNewPair(event: PairCreated): void {
   // load factory (create if first exchange)
@@ -58,6 +59,7 @@ export function handleNewPair(event: PairCreated): void {
     token0.untrackedVolumeUSD = ZERO_BD
     token0.totalLiquidity = ZERO_BD
     // token0.allPairs = []
+    token0.whitelist = []
     token0.txCount = ZERO_BI
   }
 
@@ -80,7 +82,20 @@ export function handleNewPair(event: PairCreated): void {
     token1.untrackedVolumeUSD = ZERO_BD
     token1.totalLiquidity = ZERO_BD
     // token1.allPairs = []
+    token1.whitelist = []
     token1.txCount = ZERO_BI
+  }
+
+  if (isOnWhitelist(token1.id)) {
+    let white0 = token0.whitelist
+    white0.push(event.params.pair.toHexString())
+    token0.whitelist = white0
+  }
+
+  if (isOnWhitelist(token0.id)) {
+    let white1 = token1.whitelist
+    white1.push(event.params.pair.toHexString())
+    token1.whitelist = white1
   }
 
   let pair = new Pair(event.params.pair.toHexString()) as Pair
