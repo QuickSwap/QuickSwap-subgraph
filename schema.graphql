@@ -38,7 +38,7 @@ type Token @entity {
   untrackedVolumeUSD: BigDecimal!
 
   # for teacking volume
-  whitelist: [Token!]!
+  whitelist: [Pair!]!
 
   # transactions across all pairs
   txCount: BigInt!
