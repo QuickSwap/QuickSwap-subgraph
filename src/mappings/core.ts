@@ -77,11 +77,14 @@ export function handleSync(event: Sync): void {
 
   // pair.save()
 
-  // update ETH price now that reserves could have changed
   let bundle = Bundle.load('1')
-  bundle.ethPrice = getEthPriceInUSD()
-  bundle.save()
 
+   // update ETH price now that USDC-ETH reserves could have changed
+  if (pair.id === '0x853ee4b2a13f8a742d64c8f088be7ba2131f670d'){
+    bundle.ethPrice = getEthPriceInUSD(pair as Pair);
+    bundle.save()
+  }
+  
   token0.derivedETH = findEthPerToken(token0 as Token)
   token1.derivedETH = findEthPerToken(token1 as Token)
   // token0.save()

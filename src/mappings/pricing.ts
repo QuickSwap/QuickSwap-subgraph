@@ -9,10 +9,15 @@ const DAI_WETH_PAIR = '0x4a35582a710e1f4b2030a3f826da20bfb6703c09' // created bl
 const USDT_WETH_PAIR = '0xf6422b997c7f54d1c6a6e103bcb1499eea0a7046' // created block 10093341
 
 
-export function getEthPriceInUSD(): BigDecimal {
+export function getEthPriceInUSD(wethUsdcPair: Pair): BigDecimal {
   //For now we will only use USDC_WETH pair for ETH prices
-  let usdcPair = Pair.load(USDC_WETH_PAIR) // usdc is token0
-  return usdcPair.token0Price;
+  if (wethUsdcPair !== null) {
+    return wethUsdcPair.token0Price
+  }
+  else {
+    return ZERO_BD
+  }
+  
 
   /**let daiPair = Pair.load(DAI_WETH_PAIR) // dai is token0
   let usdtPair = Pair.load(USDT_WETH_PAIR) // usdt is token1
