@@ -46,12 +46,6 @@ type Token @entity {
   # derived prices
   derivedETH: BigDecimal
 
-  # derived fields
-  tokenDayData: [TokenDayData!]! @derivedFrom(field: "token")
-  pairDayDataBase: [PairDayData!]! @derivedFrom(field: "token0")
-  pairDayDataQuote: [PairDayData!]! @derivedFrom(field: "token1")
-  pairBase: [Pair!]! @derivedFrom(field: "token0")
-  pairQuote: [Pair!]! @derivedFrom(field: "token1")
 }
 
 type Pair @entity {

@@ -10,8 +10,11 @@ const USDT_WETH_PAIR = '0xf6422b997c7f54d1c6a6e103bcb1499eea0a7046' // created b
 
 
 export function getEthPriceInUSD(): BigDecimal {
-  let daiPair = Pair.load(DAI_WETH_PAIR) // dai is token0
+  //For now we will only use USDC_WETH pair for ETH prices
   let usdcPair = Pair.load(USDC_WETH_PAIR) // usdc is token0
+  return usdcPair.token0Price;
+
+  /**let daiPair = Pair.load(DAI_WETH_PAIR) // dai is token0
   let usdtPair = Pair.load(USDT_WETH_PAIR) // usdt is token1
 
   // all 3 have been created
@@ -35,14 +38,14 @@ export function getEthPriceInUSD(): BigDecimal {
     return usdcPair.token0Price
   } else {
     return ZERO_BD
-  }
+  }*/
 }
 
 // token where amounts should contribute to tracked volume and liquidity
 let WHITELIST: string[] = [
   '0x7ceb23fd6bc0add59e62ac25578270cff1b9f619', // WETH
-  '0x831753dd7087cac61ab5644b308642cc1c33dc13', //QUICK
   '0x2791bca1f2de4661ed88a30c99a7a9449aa84174', // USDC
+  '0x831753dd7087cac61ab5644b308642cc1c33dc13', //QUICK
   '0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270', //WMATIC
   '0x1bfd67037b42cf73acf2047067bd4f2c47d9bfd6', //WBTC
   '0x8f3cf7ad23cd3cadbd9735aff958023239c6a063', // DAI
@@ -100,9 +103,9 @@ export function getTrackedVolumeUSD(
   tokenAmount0: BigDecimal,
   token0: Token,
   tokenAmount1: BigDecimal,
-  token1: Token
+  token1: Token,
+  bundle: Bundle
 ): BigDecimal {
-  let bundle = Bundle.load('1')
   let price0 = token0.derivedETH.times(bundle.ethPrice)
   let price1 = token1.derivedETH.times(bundle.ethPrice)
 

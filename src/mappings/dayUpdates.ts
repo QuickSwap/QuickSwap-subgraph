@@ -59,8 +59,7 @@ export function updatePairDayData(pair: Pair, event: EthereumEvent): PairDayData
   return pairDayData as PairDayData
 }
 
-export function updateTokenDayData(token: Token, event: EthereumEvent): TokenDayData {
-  let bundle = Bundle.load('1')
+export function updateTokenDayData(token: Token, event: EthereumEvent, bundle: Bundle): TokenDayData {
   let timestamp = event.block.timestamp.toI32()
   let dayID = timestamp / 86400
   let dayStartTimestamp = dayID * 86400

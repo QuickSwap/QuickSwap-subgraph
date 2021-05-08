@@ -123,6 +123,7 @@ export function handleMint(event: Mint): void {
 
   let pair = Pair.load(event.address.toHex())
   let uniswap = UniswapFactory.load(FACTORY_ADDRESS)
+  let bundle = Bundle.load('1')
 
   let token0 = Token.load(pair.token0)
   let token1 = Token.load(pair.token1)
@@ -134,8 +135,8 @@ export function handleMint(event: Mint): void {
 
   // update day entities
   let dpd = updatePairDayData(pair as Pair, event)
-  let tdd0 = updateTokenDayData(token0 as Token, event)
-  let tdd1 = updateTokenDayData(token1 as Token, event)
+  let tdd0 = updateTokenDayData(token0 as Token, event, bundle as Bundle)
+  let tdd1 = updateTokenDayData(token1 as Token, event, bundle as Bundle)
   dpd.save()
   tdd0.save()
   tdd1.save()
@@ -145,6 +146,7 @@ export function handleBurn(event: Burn): void {
 
   let pair = Pair.load(event.address.toHex())
   let uniswap = UniswapFactory.load(FACTORY_ADDRESS)
+  let bundle = Bundle.load('1')
 
   //update token info
   let token0 = Token.load(pair.token0)
@@ -158,8 +160,8 @@ export function handleBurn(event: Burn): void {
 
   // update day entities
   let dpd = updatePairDayData(pair as Pair, event)
-  let tdd0 = updateTokenDayData(token0 as Token, event)
-  let tdd1 = updateTokenDayData(token1 as Token, event)
+  let tdd0 = updateTokenDayData(token0 as Token, event, bundle as Bundle)
+  let tdd1 = updateTokenDayData(token1 as Token, event, bundle as Bundle)
   dpd.save()
   tdd0.save()
   tdd1.save()
@@ -189,7 +191,7 @@ export function handleSwap(event: Swap): void {
   let derivedAmountUSD = derivedAmountETH.times(bundle.ethPrice)
 
   // only accounts for volume through white listed tokens
-  let trackedAmountUSD = getTrackedVolumeUSD(amount0Total, token0 as Token, amount1Total, token1 as Token)
+  let trackedAmountUSD = getTrackedVolumeUSD(amount0Total, token0 as Token, amount1Total, token1 as Token, bundle as Bundle)
 
   let trackedAmountETH: BigDecimal
   if (bundle.ethPrice.equals(ZERO_BD)) {
@@ -231,8 +233,8 @@ export function handleSwap(event: Swap): void {
   // update day entities
   let pairDayData = updatePairDayData(pair as Pair, event)
   let uniswapDayData = updateUniswapDayData(uniswap as UniswapFactory, event)
-  let token0DayData = updateTokenDayData(token0 as Token, event)
-  let token1DayData = updateTokenDayData(token1 as Token, event)
+  let token0DayData = updateTokenDayData(token0 as Token, event, bundle as Bundle)
+  let token1DayData = updateTokenDayData(token1 as Token, event, bundle as Bundle)
 
   // swap specific updating
   uniswapDayData.dailyVolumeUSD = uniswapDayData.dailyVolumeUSD.plus(trackedAmountUSD)
