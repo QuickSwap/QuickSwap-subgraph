@@ -21,6 +21,9 @@ import {
   //createLiquiditySnapshot
 } from './helpers'
 
+const USDC_WETH_PAIR = '0x853ee4b2a13f8a742d64c8f088be7ba2131f670d' // created 10008355
+
+
 export function handleTransfer(event: Transfer): void {
   // ignore initial transfers for first adds
   if (event.params.to.toHexString() == ADDRESS_ZERO && event.params.value.equals(BigInt.fromI32(1000))) {
@@ -80,10 +83,9 @@ export function handleSync(event: Sync): void {
   let bundle = Bundle.load('1')
 
    // update ETH price now that USDC-ETH reserves could have changed
-  if (pair.id === '0x853ee4b2a13f8a742d64c8f088be7ba2131f670d'){
-    bundle.ethPrice = getEthPriceInUSD(pair as Pair);
-    bundle.save()
-  }
+  bundle.ethPrice = getEthPriceInUSD();
+  bundle.save()
+
   
   token0.derivedETH = findEthPerToken(token0 as Token)
   token1.derivedETH = findEthPerToken(token1 as Token)
