@@ -8,7 +8,7 @@
     "build": "graph build",
     "create-local": "graph create sameepsi/quickswap --node http://127.0.0.1:8020/",
     "deploy-local": "graph deploy sameepsi/quickswap --ipfs http://localhost:5001 --node http://127.0.0.1:8020/ --debug",
-    "deploy": "graph deploy --access-token <access_token> --node https://api.thegraph.com/deploy/ --ipfs https://api.thegraph.com/ipfs/ sameepsi/quickswap",
+    "deploy": "graph deploy --access-token 244e2a5c24e74c79b27ade6490ce7d6d --node https://api.thegraph.com/deploy/ --ipfs https://api.thegraph.com/ipfs/ sameepsi/quickswap",
     "deploy02": "graph deploy --access-token <access_token> --node https://api.thegraph.com/deploy/ --ipfs https://api.thegraph.com/ipfs/ sameepsi/quickswap02",
     "deploy03": "graph deploy --access-token d0e3ef499e5447f6ab11f8652e044083 --node https://api.thegraph.com/deploy/ --ipfs https://api.thegraph.com/ipfs/ sameepsi/quickswap03",
     "deploy05": "graph deploy --access-token d0e3ef499e5447f6ab11f8652e044083 --node https://api.thegraph.com/deploy/ --ipfs https://api.thegraph.com/ipfs/ sameepsi/quickswap05",

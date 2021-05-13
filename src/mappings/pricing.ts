@@ -1,7 +1,7 @@
 /* eslint-disable prefer-const */
 import { Pair, Token, Bundle } from '../types/schema'
-import { BigDecimal, Address } from '@graphprotocol/graph-ts/index'
-import { ZERO_BD, factoryContract, ADDRESS_ZERO, ONE_BD } from './helpers'
+import { BigDecimal } from '@graphprotocol/graph-ts/index'
+import { ZERO_BD, ONE_BD } from './helpers'
 
 const WETH_ADDRESS = '0x7ceb23fd6bc0add59e62ac25578270cff1b9f619'
 const USDC_WETH_PAIR = '0x853ee4b2a13f8a742d64c8f088be7ba2131f670d' // created 10008355
@@ -10,8 +10,17 @@ const USDT_WETH_PAIR = '0xf6422b997c7f54d1c6a6e103bcb1499eea0a7046' // created b
 
 
 export function getEthPriceInUSD(): BigDecimal {
-  let daiPair = Pair.load(DAI_WETH_PAIR) // dai is token0
-  let usdcPair = Pair.load(USDC_WETH_PAIR) // usdc is token0
+  //For now we will only use USDC_WETH pair for ETH prices
+  let usdcPair = Pair.load(USDC_WETH_PAIR);
+  if (usdcPair !== null) {
+    return usdcPair.token0Price
+  }
+  else {
+    return ZERO_BD
+  }
+  
+
+  /**let daiPair = Pair.load(DAI_WETH_PAIR) // dai is token0
   let usdtPair = Pair.load(USDT_WETH_PAIR) // usdt is token1
 
   // all 3 have been created
@@ -35,23 +44,20 @@ export function getEthPriceInUSD(): BigDecimal {
     return usdcPair.token0Price
   } else {
     return ZERO_BD
-  }
+  }*/
 }
 
 // token where amounts should contribute to tracked volume and liquidity
 let WHITELIST: string[] = [
   '0x7ceb23fd6bc0add59e62ac25578270cff1b9f619', // WETH
-  '0x8f3cf7ad23cd3cadbd9735aff958023239c6a063', // DAI
   '0x2791bca1f2de4661ed88a30c99a7a9449aa84174', // USDC
-  '0xc2132d05d31c914a87c6611c10748aeb04b58e8f', // USDT
-  '0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270', //WMATIC
   '0x831753dd7087cac61ab5644b308642cc1c33dc13', //QUICK
-  '0xb33eaad8d922b1083446dc23f610c2567fb5180f',  //UNI
+  '0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270', //WMATIC
   '0x1bfd67037b42cf73acf2047067bd4f2c47d9bfd6', //WBTC
-  '0x385eeac5cb85a38a9a07a70c73e0a3271cfb54a7', //GHST
+  '0x8f3cf7ad23cd3cadbd9735aff958023239c6a063', // DAI
+  '0xc2132d05d31c914a87c6611c10748aeb04b58e8f', // USDT
   '0x9719d867a500ef117cc201206b8ab51e794d3f82', //MAUSDC
   '0x104592a158490a9228070e0a8e5343b499e125d0', //FRAX
-  '0x0e59d50add2d90f5111aca875bae0a72d95b4762', //DB
   '0x033d942a6b495c4071083f4cde1f17e986fe856c' //AGA
 ]
 
@@ -77,7 +83,7 @@ export function findEthPerToken(token: Token): BigDecimal {
   // loop through whitelist and check if paired with any
   let whitelist = token.whitelist
   for (let i = 0; i < whitelist.length; ++i) {
-    let pairAddress = whitelist[i]
+      let pairAddress = whitelist[i]
       let pair = Pair.load(pairAddress)
       if (pair.token0 == token.id && pair.reserveETH.gt(MINIMUM_LIQUIDITY_THRESHOLD_ETH)) {
         let token1 = Token.load(pair.token1)
@@ -102,9 +108,8 @@ export function getTrackedVolumeUSD(
   token0: Token,
   tokenAmount1: BigDecimal,
   token1: Token,
-  pair: Pair
+  bundle: Bundle
 ): BigDecimal {
-  let bundle = Bundle.load('1')
   let price0 = token0.derivedETH.times(bundle.ethPrice)
   let price1 = token1.derivedETH.times(bundle.ethPrice)
 
@@ -161,9 +166,9 @@ export function getTrackedLiquidityUSD(
   tokenAmount0: BigDecimal,
   token0: Token,
   tokenAmount1: BigDecimal,
-  token1: Token
+  token1: Token,
+  bundle: Bundle
 ): BigDecimal {
-  let bundle = Bundle.load('1')
   let price0 = token0.derivedETH.times(bundle.ethPrice)
   let price1 = token1.derivedETH.times(bundle.ethPrice)
 
