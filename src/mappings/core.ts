@@ -51,7 +51,7 @@ export function handleTransfer(event: Transfer): void {
   }
 
   // burn
-  if (to.toHexString() == ADDRESS_ZERO && from.toHexString() == pair.id) {
+  if (to.toHexString() == ADDRESS_ZERO) {
     pair.totalSupply = pair.totalSupply.minus(value)
     pair.save()
   }
