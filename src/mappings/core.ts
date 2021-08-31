@@ -43,12 +43,12 @@ export function handleTransfer(event: Transfer): void {
   let value = convertTokenToDecimal(event.params.value, BI_18)
 
   // get or create transaction
-  
+
   if (from.toHexString() == ADDRESS_ZERO) {
     // update total supply
     pair.totalSupply = pair.totalSupply.plus(value)
-    pair.save()    
-  } 
+    pair.save()
+  }
 
   // burn
   if (to.toHexString() == ADDRESS_ZERO && from.toHexString() == pair.id) {
@@ -86,7 +86,7 @@ export function handleSync(event: Sync): void {
   bundle.ethPrice = getEthPriceInUSD();
   bundle.save()
 
-  
+
   token0.derivedETH = findEthPerToken(token0 as Token)
   token1.derivedETH = findEthPerToken(token1 as Token)
   // token0.save()
@@ -137,6 +137,10 @@ export function handleMint(event: Mint): void {
   uniswap.txCount = uniswap.txCount.plus(ONE_BI)
 
   uniswap.save()
+
+  // update the LP position
+  //let liquidityPosition = createLiquidityPosition(event.address, mint.to as Address)
+  //createLiquiditySnapshot(liquidityPosition, event)
 
   // update day entities
   let dpd = updatePairDayData(pair as Pair, event)
@@ -255,7 +259,7 @@ export function handleSwap(event: Swap): void {
 
   // swap specific updating for token0
   token0DayData.dailyVolumeToken = token0DayData.dailyVolumeToken.plus(amount0Total)
-  token0DayData.dailyVolumeETH = token0DayData.dailyVolumeETH.plus(amount0Total.times(token1.derivedETH as BigDecimal))
+  token0DayData.dailyVolumeETH = token0DayData.dailyVolumeETH.plus(amount0Total.times(token0.derivedETH as BigDecimal))
   token0DayData.dailyVolumeUSD = token0DayData.dailyVolumeUSD.plus(
     amount0Total.times(token0.derivedETH as BigDecimal).times(bundle.ethPrice)
   )
