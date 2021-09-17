@@ -3,9 +3,6 @@ description: Quickswap is a decentralized protocol for automated token exchange 
 repository: https://github.com/QuickSwap/QuickSwap-subgraph.git
 schema:
   file: ./schema.graphql
-graft:
-  base: QmfZAUKkHkLzKtVFQtGqSs4kKch9dfFg5Exs2zG9yNJrTW      # Subgraph ID of base subgraph
-  block: 17116542   # Block number
 dataSources:
   - kind: ethereum/contract
     name: Factory

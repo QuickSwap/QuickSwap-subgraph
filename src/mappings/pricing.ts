@@ -58,7 +58,8 @@ let WHITELIST: string[] = [
   '0xc2132d05d31c914a87c6611c10748aeb04b58e8f', // USDT
   '0x9719d867a500ef117cc201206b8ab51e794d3f82', //MAUSDC
   '0x104592a158490a9228070e0a8e5343b499e125d0', //FRAX
-  '0x033d942a6b495c4071083f4cde1f17e986fe856c' //AGA
+  '0x033d942a6b495c4071083f4cde1f17e986fe856c', //AGA
+  '0xd6df932a45c0f255f85145f286ea0b292b21c90b' //AAVE
 ]
 
 export function isOnWhitelist(token: string): boolean {
