@@ -60,7 +60,8 @@ let WHITELIST: string[] = [
   '0x104592a158490a9228070e0a8e5343b499e125d0', //FRAX
   '0x033d942a6b495c4071083f4cde1f17e986fe856c', //AGA
   '0xd6df932a45c0f255f85145f286ea0b292b21c90b', //AAVE
-  '0xa7051C5a22d963b81D71C2BA64D46a877fBc1821' //EROWAN
+  '0xa7051c5a22d963b81d71c2ba64d46a877fbc1821', //EROWAN
+  '0xfe4546fefe124f30788c4cc1bb9aa6907a7987f9' //cxETH
 ]
 
 export function isOnWhitelist(token: string): boolean {
