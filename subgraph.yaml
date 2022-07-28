@@ -1,4 +1,4 @@
-specVersion: 0.0.4
+specVersion: 0.0.2
 description: Quickswap is a decentralized protocol for automated token exchange on Matic.
 repository: https://github.com/QuickSwap/QuickSwap-subgraph.git
 schema:
@@ -13,7 +13,7 @@ dataSources:
       startBlock: 5484576
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.6
+      apiVersion: 0.0.4
       language: wasm/assemblyscript
       file: ./src/mappings/factory.ts
       entities:
@@ -39,7 +39,7 @@ templates:
       abi: Pair
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.6
+      apiVersion: 0.0.4
       language: wasm/assemblyscript
       file: ./src/mappings/core.ts
       entities:
