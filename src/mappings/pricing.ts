@@ -61,9 +61,20 @@ let WHITELIST: string[] = [
   '0x033d942a6b495c4071083f4cde1f17e986fe856c' //AGA
 ]
 
+let BLACKLIST: string[] = [
+  "0x5d76fa95c308fce88d347556785dd1dd44416272"
+]
+
 export function isOnWhitelist(token: string): boolean {
   for(var i = 0; i < WHITELIST.length; i++) {
     if(token == WHITELIST[i]) return true
+  }
+  return false
+}
+
+export function isOnBlacklist(token: string): boolean {
+  for(var i = 0; i < BLACKLIST.length; i++) {
+    if(token == BLACKLIST[i]) return true
   }
   return false
 }
