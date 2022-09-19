@@ -65,6 +65,10 @@ let WHITELIST: string[] = [
   '0xE6469Ba6D2fD6130788E0eA9C0a0515900563b59' //UST
 ]
 
+let BLACKLIST: string[] = [
+  "0x5d76fa95c308fce88d347556785dd1dd44416272"
+]
+
 export function isOnWhitelist(token: string): boolean {
   for(var i = 0; i < WHITELIST.length; i++) {
     if(token == WHITELIST[i]) return true
@@ -72,6 +76,16 @@ export function isOnWhitelist(token: string): boolean {
   return false
 }
 
+export function isOnBlacklist(token: string): boolean {
+  for(var i = 0; i < BLACKLIST.length; i++) {
+    if(token == BLACKLIST[i]) return true
+  }
+  return false
+}
+
+export function addToBlackList(token: string): void {
+  BLACKLIST.push(token);
+}
 // minimum liquidity for price to get tracked
 let MINIMUM_LIQUIDITY_THRESHOLD_ETH = BigDecimal.fromString('1')
 

@@ -12,7 +12,7 @@ import {
   fetchTokenDecimals,
   fetchTokenTotalSupply
 } from './helpers'
-import { isOnWhitelist } from './pricing'
+import { isOnBlacklist, isOnWhitelist } from './pricing'
 
 export function handleNewPair(event: PairCreated): void {
   // load factory (create if first exchange)
@@ -42,6 +42,9 @@ export function handleNewPair(event: PairCreated): void {
   // fetch info if null
   if (token0 === null) {
     token0 = new Token(event.params.token0.toHexString())
+    if (isOnBlacklist(token0.id)) {
+      return;
+    }
     token0.symbol = fetchTokenSymbol(event.params.token0)
     token0.name = fetchTokenName(event.params.token0)
     token0.totalSupply = fetchTokenTotalSupply(event.params.token0)
@@ -66,6 +69,9 @@ export function handleNewPair(event: PairCreated): void {
   // fetch info if null
   if (token1 === null) {
     token1 = new Token(event.params.token1.toHexString())
+    if (isOnBlacklist(token1.id)) {
+      return;
+    }
     token1.symbol = fetchTokenSymbol(event.params.token1)
     token1.name = fetchTokenName(event.params.token1)
     token1.totalSupply = fetchTokenTotalSupply(event.params.token1)

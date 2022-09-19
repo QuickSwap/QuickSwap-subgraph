@@ -12,7 +12,7 @@ import {
 } from '../types/schema'
 import { Pair as PairContract, Mint, Burn, Swap, Transfer, Sync } from '../types/templates/Pair/Pair'
 import { updatePairDayData, updateTokenDayData, updateUniswapDayData, updatePairHourData } from './dayUpdates'
-import { getEthPriceInUSD, findEthPerToken, getTrackedVolumeUSD, getTrackedLiquidityUSD } from './pricing'
+import { getEthPriceInUSD, findEthPerToken, getTrackedVolumeUSD, getTrackedLiquidityUSD, isOnBlacklist } from './pricing'
 import {
   convertTokenToDecimal,
   ADDRESS_ZERO,
@@ -286,6 +286,10 @@ export function handleMint(event: Mint): void {
   let token0 = Token.load(pair.token0)
   let token1 = Token.load(pair.token1)
 
+  if (isOnBlacklist(token0.id) || isOnBlacklist(token1.id)) {
+    return;
+  }
+
   // update exchange info (except balances, sync will cover that)
   let token0Amount = convertTokenToDecimal(event.params.amount0, token0.decimals)
   let token1Amount = convertTokenToDecimal(event.params.amount1, token1.decimals)
@@ -352,6 +356,10 @@ export function handleBurn(event: Burn): void {
   //update token info
   let token0 = Token.load(pair.token0)
   let token1 = Token.load(pair.token1)
+  if (isOnBlacklist(token0.id) || isOnBlacklist(token1.id)) {
+    return;
+  }
+
   let token0Amount = convertTokenToDecimal(event.params.amount0, token0.decimals)
   let token1Amount = convertTokenToDecimal(event.params.amount1, token1.decimals)
 
@@ -406,6 +414,9 @@ export function handleSwap(event: Swap): void {
   let pair = Pair.load(event.address.toHexString())
   let token0 = Token.load(pair.token0)
   let token1 = Token.load(pair.token1)
+  if (isOnBlacklist(token0.id) || isOnBlacklist(token1.id)) {
+    return;
+  }
   let amount0In = convertTokenToDecimal(event.params.amount0In, token0.decimals)
   let amount1In = convertTokenToDecimal(event.params.amount1In, token1.decimals)
   let amount0Out = convertTokenToDecimal(event.params.amount0Out, token0.decimals)
