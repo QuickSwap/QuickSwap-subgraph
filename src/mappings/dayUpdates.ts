@@ -1,9 +1,9 @@
 /* eslint-disable prefer-const */
-import { BigInt, BigDecimal, EthereumEvent } from '@graphprotocol/graph-ts'
+import { BigInt, BigDecimal, ethereum } from '@graphprotocol/graph-ts'
 import { Pair, Bundle, Token, UniswapFactory, UniswapDayData, PairDayData, TokenDayData } from '../types/schema'
 import { ONE_BI, ZERO_BD, ZERO_BI } from './helpers'
 
-export function updateUniswapDayData(uniswap: UniswapFactory, event: EthereumEvent): UniswapDayData {
+export function updateUniswapDayData(uniswap: UniswapFactory, event: ethereum.Event): UniswapDayData {
   // let uniswap = UniswapFactory.load(FACTORY_ADDRESS)
   let timestamp = event.block.timestamp.toI32()
   let dayID = timestamp / 86400
@@ -27,7 +27,7 @@ export function updateUniswapDayData(uniswap: UniswapFactory, event: EthereumEve
   return uniswapDayData as UniswapDayData
 }
 
-export function updatePairDayData(pair: Pair, event: EthereumEvent): PairDayData {
+export function updatePairDayData(pair: Pair, event: ethereum.Event): PairDayData {
   let timestamp = event.block.timestamp.toI32()
   let dayID = timestamp / 86400
   let dayStartTimestamp = dayID * 86400
@@ -59,7 +59,7 @@ export function updatePairDayData(pair: Pair, event: EthereumEvent): PairDayData
   return pairDayData as PairDayData
 }
 
-export function updateTokenDayData(token: Token, event: EthereumEvent, bundle: Bundle): TokenDayData {
+export function updateTokenDayData(token: Token, event: ethereum.Event, bundle: Bundle): TokenDayData {
   let timestamp = event.block.timestamp.toI32()
   let dayID = timestamp / 86400
   let dayStartTimestamp = dayID * 86400
