@@ -6,8 +6,8 @@
   "scripts": {
     "codegen": "graph codegen --output-dir src/types/",
     "build": "graph build",
-    "create-local": "graph create sameepsi/quickswap --node http://127.0.0.1:8020/",
-    "deploy-local": "graph deploy sameepsi/quickswap --ipfs http://localhost:5001 --node http://127.0.0.1:8020/ --debug",
+    "create-local": "graph create quickswap/v2 --node http://127.0.0.1:8020/",
+    "deploy-local": "graph deploy quickswap/v2 --ipfs http://localhost:5001 --node http://127.0.0.1:8020/ --debug",
     "deploy": "graph deploy --access-token 244e2a5c24e74c79b27ade6490ce7d6d --node https://api.thegraph.com/deploy/ --ipfs https://api.thegraph.com/ipfs/ sameepsi/quickswap",
     "deploy02": "graph deploy --access-token <access_token> --node https://api.thegraph.com/deploy/ --ipfs https://api.thegraph.com/ipfs/ sameepsi/quickswap02",
     "deploy06": "graph deploy --access-token <access_token> --node https://api.thegraph.com/deploy/ --ipfs https://api.thegraph.com/ipfs/ sameepsi/quickswap06",
@@ -15,7 +15,9 @@
     "deploy07": "graph deploy --access-token 43ed873c9b7244c3868a01d59a8b7768 --node https://api.thegraph.com/deploy/ --ipfs https://api.thegraph.com/ipfs/ sameepsi/quickswap07",
     "deploy05": "graph deploy --access-token d0e3ef499e5447f6ab11f8652e044083 --node https://api.thegraph.com/deploy/ --ipfs https://api.thegraph.com/ipfs/ sameepsi/quickswap05",
     "deploy-staging": "graph deploy $THE_GRAPH_GITHUB_USER/$THE_GRAPH_SUBGRAPH_NAME /Uniswap --ipfs https://api.staging.thegraph.com/ipfs/ --node https://api.staging.thegraph.com/deploy/",
-    "watch-local": "graph deploy graphprotocol/Uniswap2 --watch --debug --node http://127.0.0.1:8020/ --ipfs http://localhost:5001"
+    "watch-local": "graph deploy graphprotocol/Uniswap2 --watch --debug --node http://127.0.0.1:8020/ --ipfs http://localhost:5001",
+    "create-dogechain01": "graph create quickswap/v2 --node http://172.31.33.27:8020",
+    "deploy-dogechain01": "graph deploy quickswap/v2 --debug --ipfs http://172.31.33.27:5001 --node http://172.31.33.27:8020"
   },
   "devDependencies": {
     "@graphprotocol/graph-cli": "^0.20.0",
