@@ -1,9 +1,6 @@
 specVersion: 0.0.2
 description: Quickswap is a decentralized protocol for automated token exchange on Matic.
 repository: https://github.com/QuickSwap/QuickSwap-subgraph.git
-graft:
-  base: QmPUb1rWhd9C81XfiGTSEH3koXikC1bUZaUdMm84957aFv
-  block: 31025550
 schema:
   file: ./schema.graphql
 dataSources:
@@ -11,9 +8,9 @@ dataSources:
     name: Factory
     network: matic
     source:
-      address: '0x5757371414417b8C6CAad45bAeF941aBc7d3Ab32'
+      address: '0xC3550497E591Ac6ed7a7E03ffC711CfB7412E57F'
       abi: Factory
-      startBlock: 5484576
+      startBlock: 10457229
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.4

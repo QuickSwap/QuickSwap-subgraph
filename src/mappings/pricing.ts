@@ -3,11 +3,8 @@ import { Pair, Token, Bundle } from '../types/schema'
 import { BigDecimal } from '@graphprotocol/graph-ts/index'
 import { ZERO_BD, ONE_BD } from './helpers'
 
-const WETH_ADDRESS = '0x7ceb23fd6bc0add59e62ac25578270cff1b9f619'
-const USDC_WETH_PAIR = '0x853ee4b2a13f8a742d64c8f088be7ba2131f670d' // created 10008355
-const DAI_WETH_PAIR = '0x4a35582a710e1f4b2030a3f826da20bfb6703c09' // created block 10042267
-const USDT_WETH_PAIR = '0xf6422b997c7f54d1c6a6e103bcb1499eea0a7046' // created block 10093341
-
+const WETH_ADDRESS = '0xb7ddc6414bf4f5515b52d8bdd69973ae205ff101'
+const USDC_WETH_PAIR = '0xbbd5950f3cf55976b61fe715c6826090e0356d79' // created 10008355
 
 export function getEthPriceInUSD(): BigDecimal {
   //For now we will only use USDC_WETH pair for ETH prices
@@ -49,19 +46,15 @@ export function getEthPriceInUSD(): BigDecimal {
 
 // token where amounts should contribute to tracked volume and liquidity
 let WHITELIST: string[] = [
-  '0x7ceb23fd6bc0add59e62ac25578270cff1b9f619', // WETH
-  '0x2791bca1f2de4661ed88a30c99a7a9449aa84174', // USDC
-  '0x831753dd7087cac61ab5644b308642cc1c33dc13', //QUICK
-  '0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270', //WMATIC
-  '0x1bfd67037b42cf73acf2047067bd4f2c47d9bfd6', //WBTC
-  '0x8f3cf7ad23cd3cadbd9735aff958023239c6a063', // DAI
-  '0xc2132d05d31c914a87c6611c10748aeb04b58e8f', // USDT
-  '0x9719d867a500ef117cc201206b8ab51e794d3f82', //MAUSDC
-  '0x104592a158490a9228070e0a8e5343b499e125d0', //FRAX
-  '0x033d942a6b495c4071083f4cde1f17e986fe856c', //AGA
-  '0xd6df932a45c0f255f85145f286ea0b292b21c90b', //AAVE
-  '0xa7051c5a22d963b81d71c2ba64d46a877fbc1821', //EROWAN
-  '0x8497842420cfdbc97896c2353d75d89fc8d5be5d' //VERSA
+  '0xb44a9b6905af7c801311e8f4e76932ee959c663c', // ETHER
+  '0x765277eebeca2e31912c9946eae1021199b39c61', // USDC
+  '0xe3f5a90f9cb311505cd691a46596599aa1a0ad7d', //USDT
+  '0xfa9343c3897324496a05fc75abed6bac29f8a40f', //WBTC
+  '0xb7ddc6414bf4f5515b52d8bdd69973ae205ff101', //WWDOGE
+  '0x582daef1f36d6009f64b74519cfd612a8467be18', // DD
+  '0xb12c13e66ade1f72f71834f2fc5082db8c091358', // QUICK
+  '0xdc42728b0ea910349ed3c6e1c9dc06b5fb591f98', //MATIC
+  '0x7b4328c127b85369d9f82ca0503b000d09cf9180' //DC
 ]
 
 let BLACKLIST: string[] = [
