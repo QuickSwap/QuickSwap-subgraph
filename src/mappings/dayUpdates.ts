@@ -103,10 +103,7 @@ export function updateTokenDayData(token: Token, event: ethereum.Event, bundle: 
     tokenDayData = new TokenDayData(tokenDayID)
     tokenDayData.date = dayStartTimestamp
     tokenDayData.token = token.id
-    let priceUSD = ZERO_BD
-    if (token.derivedETH != null) {
-      priceUSD = token.derivedETH.times(bundle.ethPrice)
-    }
+    const priceUSD = token.derivedETH!.times(bundle.ethPrice)
     tokenDayData.priceUSD = priceUSD
     tokenDayData.dailyVolumeToken = ZERO_BD
     tokenDayData.dailyVolumeETH = ZERO_BD
@@ -114,10 +111,7 @@ export function updateTokenDayData(token: Token, event: ethereum.Event, bundle: 
     tokenDayData.dailyTxns = ZERO_BI
     tokenDayData.totalLiquidityUSD = ZERO_BD
   }
-  let priceUSD = ZERO_BD
-  if (token.derivedETH != null) {
-    priceUSD = token.derivedETH.times(bundle.ethPrice)
-  }
+  const priceUSD = token.derivedETH!.times(bundle.ethPrice)
   tokenDayData.priceUSD = priceUSD
   tokenDayData.totalLiquidityToken = token.totalLiquidity
   tokenDayData.totalLiquidityETH = token.totalLiquidity.times(token.derivedETH as BigDecimal)

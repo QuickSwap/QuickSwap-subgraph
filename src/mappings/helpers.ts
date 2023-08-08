@@ -1,5 +1,4 @@
-/* eslint-disable prefer-const */
-import { log, BigInt, BigDecimal, Address, ethereum } from '@graphprotocol/graph-ts'
+import { log, BigInt, BigDecimal, Address, ethereum, Bytes } from '@graphprotocol/graph-ts'
 import { ERC20 } from '../types/Factory/ERC20'
 import { ERC20SymbolBytes } from '../types/Factory/ERC20SymbolBytes'
 import { ERC20NameBytes } from '../types/Factory/ERC20NameBytes'
@@ -125,26 +124,26 @@ export function fetchTokenDecimals(tokenAddress: Address): BigInt {
   return BigInt.fromI32(0)
 }
 
-export function createLiquidityPosition(exchange: Address, user: Address): LiquidityPosition {
-  let id = exchange
+export function createLiquidityPosition(exchange: Address, user: Bytes): LiquidityPosition {
+  const id = exchange
     .toHexString()
     .concat('-')
     .concat(user.toHexString())
-  let liquidityTokenBalance = LiquidityPosition.load(id)
+  const liquidityTokenBalance = LiquidityPosition.load(id)
   if (liquidityTokenBalance === null) {
     let pair = Pair.load(exchange.toHexString())
     if (pair != null) {
       pair.liquidityProviderCount = pair.liquidityProviderCount.plus(ONE_BI)
       pair.save()
     }
-    liquidityTokenBalance = new LiquidityPosition(id)
-    liquidityTokenBalance.liquidityTokenBalance = ZERO_BD
-    liquidityTokenBalance.pair = exchange.toHexString()
-    liquidityTokenBalance.user = user.toHexString()
-    liquidityTokenBalance.save()
+    const liquidityPosition = new LiquidityPosition(id)
+    liquidityPosition.liquidityTokenBalance = ZERO_BD
+    liquidityPosition.pair = exchange.toHexString()
+    liquidityPosition.user = user.toHexString()
+    liquidityPosition.save()
+    return liquidityPosition
   }
-  if (liquidityTokenBalance === null) log.error('LiquidityTokenBalance is null', [id])
-  return liquidityTokenBalance as LiquidityPosition
+  return liquidityTokenBalance
 }
 
 export function createUser(address: Address): void {
@@ -170,16 +169,8 @@ export function createLiquiditySnapshot(position: LiquidityPosition, event: ethe
   snapshot.block = event.block.number.toI32()
   snapshot.user = position.user
   snapshot.pair = position.pair
-  let token0PriceUSD = ZERO_BD
-  if (token0 != null && token0.derivedETH != null && bundle != null) {
-    token0PriceUSD = token0.derivedETH.times(bundle.ethPrice)
-  }
-  snapshot.token0PriceUSD = token0PriceUSD
-  let token1PriceUSD = ZERO_BD
-  if (token1 != null && token1.derivedETH != null && bundle != null) {
-    token1PriceUSD = token1.derivedETH.times(bundle.ethPrice)
-  }
-  snapshot.token1PriceUSD = token1PriceUSD
+  snapshot.token0PriceUSD = token0!.derivedETH!.times(bundle!.ethPrice)
+  snapshot.token1PriceUSD = token1!.derivedETH!.times(bundle!.ethPrice)
   snapshot.reserve0 = pair.reserve0
   snapshot.reserve1 = pair.reserve1
   snapshot.reserveUSD = pair.reserveUSD
