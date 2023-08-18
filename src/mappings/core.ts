@@ -9,7 +9,7 @@ import {
   Swap as SwapEvent,
   Bundle
 } from '../types/schema'
-import { Pair as PairContract, Mint, Burn, Swap, Transfer, Sync } from '../types/templates/Pair/Pair'
+import { Mint, Burn, Swap, Transfer, Sync } from '../types/templates/Pair/Pair'
 import { updatePairDayData, updateTokenDayData, updateUniswapDayData, updatePairHourData } from './dayUpdates'
 import {
   getEthPriceInUSD,
@@ -23,11 +23,11 @@ import {
   ADDRESS_ZERO,
   FACTORY_ADDRESS,
   ONE_BI,
-  createUser,
   createLiquidityPosition,
   ZERO_BD,
   BI_18,
-  createLiquiditySnapshot
+  createLiquiditySnapshot,
+  createUser
 } from './helpers'
 
 function isCompleteMint(mintId: string): boolean {
@@ -46,13 +46,12 @@ export function handleTransfer(event: Transfer): void {
 
   // user stats
   let from = event.params.from
-  //createUser(from)
+  createUser(from)
   let to = event.params.to
-  //createUser(to)
+  createUser(to)
 
   // get pair and load contract
   let pair = Pair.load(event.address.toHexString())
-  let pairContract = PairContract.bind(event.address)
   if (pair == null || factory == null) return
 
   // liquidity token amount being transfered
@@ -204,14 +203,18 @@ export function handleTransfer(event: Transfer): void {
 
   if (from.toHexString() != ADDRESS_ZERO && from.toHexString() != pair.id) {
     let fromUserLiquidityPosition = createLiquidityPosition(event.address, from)
-    fromUserLiquidityPosition.liquidityTokenBalance = convertTokenToDecimal(pairContract.balanceOf(from), BI_18)
+    fromUserLiquidityPosition.liquidityTokenBalance = fromUserLiquidityPosition.liquidityTokenBalance.minus(
+      convertTokenToDecimal(event.params.value, BI_18)
+    )
     fromUserLiquidityPosition.save()
     createLiquiditySnapshot(fromUserLiquidityPosition, event)
   }
 
   if (event.params.to.toHexString() != ADDRESS_ZERO && to.toHexString() != pair.id) {
     let toUserLiquidityPosition = createLiquidityPosition(event.address, to)
-    toUserLiquidityPosition.liquidityTokenBalance = convertTokenToDecimal(pairContract.balanceOf(to), BI_18)
+    toUserLiquidityPosition.liquidityTokenBalance = toUserLiquidityPosition.liquidityTokenBalance.plus(
+      convertTokenToDecimal(event.params.value, BI_18)
+    )
     toUserLiquidityPosition.save()
     createLiquiditySnapshot(toUserLiquidityPosition, event)
   }
@@ -220,7 +223,7 @@ export function handleTransfer(event: Transfer): void {
 }
 
 export function handleSync(event: Sync): void {
-  let pair = Pair.load(event.address.toHex())
+  let pair = Pair.load(event.address.toHexString())
   if (pair == null) return
   let token0 = Token.load(pair.token0)
   let token1 = Token.load(pair.token1)
@@ -302,9 +305,8 @@ export function handleMint(event: Mint): void {
   let transaction = Transaction.load(event.transaction.hash.toHexString())
   if (transaction == null) return
   let mints = transaction.mints
-  let mint = MintEvent.load(mints[mints.length - 1])
 
-  let pair = Pair.load(event.address.toHex())
+  let pair = Pair.load(event.address.toHexString())
   let uniswap = UniswapFactory.load(FACTORY_ADDRESS)
 
   if (pair == null || uniswap == null) return
@@ -344,19 +346,16 @@ export function handleMint(event: Mint): void {
   pair.save()
   uniswap.save()
 
-  if (mint != null) {
-    mint.sender = event.params.sender
-    mint.amount0 = token0Amount as BigDecimal
-    mint.amount1 = token1Amount as BigDecimal
-    mint.logIndex = event.logIndex
-    mint.amountUSD = amountTotalUSD as BigDecimal
-    mint.save()
-  }
-
-  // update the LP position
-  if (mint != null) {
-    let liquidityPosition = createLiquidityPosition(event.address, mint.to)
-    createLiquiditySnapshot(liquidityPosition, event)
+  if (mints.length > 0) {
+    let mint = MintEvent.load(mints[mints.length - 1])
+    if (mint != null) {
+      mint.sender = event.params.sender
+      mint.amount0 = token0Amount as BigDecimal
+      mint.amount1 = token1Amount as BigDecimal
+      mint.logIndex = event.logIndex
+      mint.amountUSD = amountTotalUSD as BigDecimal
+      mint.save()
+    }
   }
 
   // update day entities
@@ -383,9 +382,8 @@ export function handleBurn(event: Burn): void {
   }
 
   let burns = transaction.burns
-  let burn = BurnEvent.load(burns[burns.length - 1])
 
-  let pair = Pair.load(event.address.toHex())
+  let pair = Pair.load(event.address.toHexString())
   let uniswap = UniswapFactory.load(FACTORY_ADDRESS)
   if (pair == null || uniswap == null) return
 
@@ -424,15 +422,18 @@ export function handleBurn(event: Burn): void {
   pair.save()
   uniswap.save()
 
-  if (burn != null) {
-    // update burn
-    // burn.sender = event.params.sender
-    burn.amount0 = token0Amount as BigDecimal
-    burn.amount1 = token1Amount as BigDecimal
-    // burn.to = event.params.to
-    burn.logIndex = event.logIndex
-    burn.amountUSD = amountTotalUSD as BigDecimal
-    burn.save()
+  if (burns.length > 0) {
+    let burn = BurnEvent.load(burns[burns.length - 1])
+    if (burn != null) {
+      // update burn
+      // burn.sender = event.params.sender
+      burn.amount0 = token0Amount as BigDecimal
+      burn.amount1 = token1Amount as BigDecimal
+      // burn.to = event.params.to
+      burn.logIndex = event.logIndex
+      burn.amountUSD = amountTotalUSD as BigDecimal
+      burn.save()
+    }
   }
 
   // update the LP position
