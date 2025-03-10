@@ -93,12 +93,18 @@ export function handleNewPair(event: PairCreated): void {
 
   if (isOnWhitelist(token1.id)) {
     let white0 = token0.whitelist
+    if(white0 == null) {
+      white0 = new Array();
+    }
     white0.push(event.params.pair.toHexString())
     token0.whitelist = white0
   }
 
   if (isOnWhitelist(token0.id)) {
     let white1 = token1.whitelist
+    if (white1 == null) {
+      white1 = new Array();
+    }
     white1.push(event.params.pair.toHexString())
     token1.whitelist = white1
   }

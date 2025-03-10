@@ -55,14 +55,12 @@ let WHITELIST: string[] = [
   '0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270', //WMATIC
   '0x1bfd67037b42cf73acf2047067bd4f2c47d9bfd6', //WBTC
   '0x8f3cf7ad23cd3cadbd9735aff958023239c6a063', // DAI
-  '0xc2132d05d31c914a87c6611c10748aeb04b58e8f', // USDT
-  '0x9719d867a500ef117cc201206b8ab51e794d3f82', //MAUSDC
-  '0x104592a158490a9228070e0a8e5343b499e125d0', //FRAX
-  '0x033d942a6b495c4071083f4cde1f17e986fe856c' //AGA
+  '0xc2132d05d31c914a87c6611c10748aeb04b58e8f' // USDT
 ]
 
 let BLACKLIST: string[] = [
-  "0x5d76fa95c308fce88d347556785dd1dd44416272"
+  "0x5d76fa95c308fce88d347556785dd1dd44416272",
+  "0xc415a0a49aafa172526d6f29d2afb977b171ed78"
 ]
 
 export function isOnWhitelist(token: string): boolean {
@@ -92,16 +90,16 @@ export function findEthPerToken(token: Token): BigDecimal {
   }
 
   // loop through whitelist and check if paired with any
-  let whitelist = token.whitelist
+  let whitelist = token.whitelist!
   for (let i = 0; i < whitelist.length; ++i) {
       let pairAddress = whitelist[i]
-      let pair = Pair.load(pairAddress)
+      let pair = Pair.load(pairAddress)!
       if (pair.token0 == token.id && pair.reserveETH.gt(MINIMUM_LIQUIDITY_THRESHOLD_ETH)) {
-        let token1 = Token.load(pair.token1)
+        let token1 = Token.load(pair.token1)!
         return pair.token1Price.times(token1.derivedETH as BigDecimal) // return token1 per our token * Eth per token 1
       }
       if (pair.token1 == token.id && pair.reserveETH.gt(MINIMUM_LIQUIDITY_THRESHOLD_ETH)) {
-        let token0 = Token.load(pair.token0)
+        let token0 = Token.load(pair.token0)!
         return pair.token0Price.times(token0.derivedETH as BigDecimal) // return token0 per our token * ETH per token 0
       }
   }
@@ -121,8 +119,8 @@ export function getTrackedVolumeUSD(
   token1: Token,
   bundle: Bundle
 ): BigDecimal {
-  let price0 = token0.derivedETH.times(bundle.ethPrice)
-  let price1 = token1.derivedETH.times(bundle.ethPrice)
+  let price0 = token0.derivedETH!.times(bundle.ethPrice)
+  let price1 = token1.derivedETH!.times(bundle.ethPrice)
 
   // if less than 1 LPs, require high minimum reserve amount amount or return 0
   /**if (pair.liquidityProviderCount.lt(BigInt.fromI32(1))) {
@@ -180,8 +178,8 @@ export function getTrackedLiquidityUSD(
   token1: Token,
   bundle: Bundle
 ): BigDecimal {
-  let price0 = token0.derivedETH.times(bundle.ethPrice)
-  let price1 = token1.derivedETH.times(bundle.ethPrice)
+  let price0 = token0.derivedETH!.times(bundle.ethPrice)
+  let price1 = token1.derivedETH!.times(bundle.ethPrice)
 
   // both are whitelist tokens, take average of both amounts
   if (WHITELIST.includes(token0.id) && WHITELIST.includes(token1.id)) {

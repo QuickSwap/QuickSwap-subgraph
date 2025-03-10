@@ -37,7 +37,7 @@ export function handleTransfer(event: Transfer): void {
   //createUser(to)
 
   // get pair and load contract
-  let pair = Pair.load(event.address.toHexString())
+  let pair = Pair.load(event.address.toHexString())!
 
   // liquidity token amount being transfered
   let value = convertTokenToDecimal(event.params.value, BI_18)
@@ -58,14 +58,14 @@ export function handleTransfer(event: Transfer): void {
 }
 
 export function handleSync(event: Sync): void {
-  let pair = Pair.load(event.address.toHex())
-  let token0 = Token.load(pair.token0)
-  let token1 = Token.load(pair.token1)
+  let pair = Pair.load(event.address.toHex())!
+  let token0 = Token.load(pair.token0)!
+  let token1 = Token.load(pair.token1)!
 
   if (isOnBlacklist(token0.id) || isOnBlacklist(token1.id)) {
     return;
   }
-  let uniswap = UniswapFactory.load(FACTORY_ADDRESS)
+  let uniswap = UniswapFactory.load(FACTORY_ADDRESS)!
 
   // reset factory liquidity by subtracting only tracked liquidity
   uniswap.totalLiquidityETH = uniswap.totalLiquidityETH.minus(pair.trackedReserveETH as BigDecimal)
@@ -84,7 +84,7 @@ export function handleSync(event: Sync): void {
 
   // pair.save()
 
-  let bundle = Bundle.load('1')
+  let bundle = Bundle.load('1')!
 
    // update ETH price now that USDC-ETH reserves could have changed
   bundle.ethPrice = getEthPriceInUSD();
@@ -130,12 +130,12 @@ export function handleSync(event: Sync): void {
 
 export function handleMint(event: Mint): void {
 
-  let pair = Pair.load(event.address.toHex())
-  let uniswap = UniswapFactory.load(FACTORY_ADDRESS)
-  let bundle = Bundle.load('1')
+  let pair = Pair.load(event.address.toHex())!
+  let uniswap = UniswapFactory.load(FACTORY_ADDRESS)!
+  let bundle = Bundle.load('1')!
 
-  let token0 = Token.load(pair.token0)
-  let token1 = Token.load(pair.token1)
+  let token0 = Token.load(pair.token0)!
+  let token1 = Token.load(pair.token1)!
   if (isOnBlacklist(token0.id) || isOnBlacklist(token1.id)) {
     return;
   }
@@ -155,13 +155,13 @@ export function handleMint(event: Mint): void {
 
 export function handleBurn(event: Burn): void {
 
-  let pair = Pair.load(event.address.toHex())
-  let uniswap = UniswapFactory.load(FACTORY_ADDRESS)
-  let bundle = Bundle.load('1')
+  let pair = Pair.load(event.address.toHex())!
+  let uniswap = UniswapFactory.load(FACTORY_ADDRESS)!
+  let bundle = Bundle.load('1')!
 
   //update token info
-  let token0 = Token.load(pair.token0)
-  let token1 = Token.load(pair.token1)
+  let token0 = Token.load(pair.token0)!
+  let token1 = Token.load(pair.token1)!
   if (isOnBlacklist(token0.id) || isOnBlacklist(token1.id)) {
     return;
   }
@@ -181,9 +181,9 @@ export function handleBurn(event: Burn): void {
 }
 
 export function handleSwap(event: Swap): void {
-  let pair = Pair.load(event.address.toHexString())
-  let token0 = Token.load(pair.token0)
-  let token1 = Token.load(pair.token1)
+  let pair = Pair.load(event.address.toHexString())!
+  let token0 = Token.load(pair.token0)!
+  let token1 = Token.load(pair.token1)!
   if (isOnBlacklist(token0.id) || isOnBlacklist(token1.id)) {
     return;
   }
@@ -197,12 +197,12 @@ export function handleSwap(event: Swap): void {
   let amount1Total = amount1Out.plus(amount1In)
 
   // ETH/USD prices
-  let bundle = Bundle.load('1')
+  let bundle = Bundle.load('1')!
 
   // get total amounts of derived USD and ETH for tracking
-  let derivedAmountETH = token1.derivedETH
+  let derivedAmountETH = token1.derivedETH!
     .times(amount1Total)
-    .plus(token0.derivedETH.times(amount0Total))
+    .plus(token0.derivedETH!.times(amount0Total))
     .div(BigDecimal.fromString('2'))
   let derivedAmountUSD = derivedAmountETH.times(bundle.ethPrice)
 
@@ -234,7 +234,7 @@ export function handleSwap(event: Swap): void {
   // pair.save()
 
   // update global values, only used tracked amounts for volume
-  let uniswap = UniswapFactory.load(FACTORY_ADDRESS)
+  let uniswap = UniswapFactory.load(FACTORY_ADDRESS)!
   uniswap.totalVolumeUSD = uniswap.totalVolumeUSD.plus(trackedAmountUSD)
   uniswap.totalVolumeETH = uniswap.totalVolumeETH.plus(trackedAmountETH)
   uniswap.untrackedVolumeUSD = uniswap.untrackedVolumeUSD.plus(derivedAmountUSD)
